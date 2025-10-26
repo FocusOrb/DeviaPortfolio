@@ -1,0 +1,278 @@
+import React, { useMemo, useState } from "react";
+import { Github, Link as LinkIcon, Mail, Moon, Sun, FileText, ArrowUpRight } from "lucide-react";
+
+// --- Quick theming ----------------------------------------------------------
+const useTheme = () => {
+  const [theme, setTheme] = useState(
+    typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? "dark"
+      : "light"
+  );
+  const toggle = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  return { theme, toggle };
+};
+
+// --- Sample project data (swap with your own) -------------------------------
+const projects = [
+  {
+    title: "FocusOrb — Productivity App",
+    description:
+      "Research-backed task focus app with streaks, daily orbs, and calendar sync. Built with Flutter/Dart.",
+    tags: ["Flutter", "Dart", "GCal", "UX Research"],
+    links: {
+      live: "#",
+      repo: "https://github.com/your-username/focusorb",
+      video: "#",
+    },
+    image:
+      "https://images.unsplash.com/photo-1518481612222-68bbe828ecd1?q=80&w=1200&auto=format&fit=crop",
+    highlight: "Student research study in progress",
+  },
+  {
+    title: "One More Day Till August — Metroidvania",
+    description:
+      "Pixel-art time‑loop game. Custom sprite sheets, Godot state machine, and narrative systems.",
+    tags: ["Godot", "GDScript", "Pixel Art", "Narrative Design"],
+    links: { live: "#", repo: "#", video: "#" },
+    image:
+      "https://images.unsplash.com/photo-1618172193763-c511deb635ca?q=80&w=1200&auto=format&fit=crop",
+    highlight: "Playable prototype + design docs",
+  },
+  {
+    title: "Security Workshops @ Library",
+    description:
+      "Community service curriculum using PicoCTF; intro to web security, HTTP, and ethical hacking.",
+    tags: ["Cybersecurity", "Education", "PicoCTF"],
+    links: { live: "#", repo: "#", video: "#" },
+    image:
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop",
+    highlight: "Hands-on labs & slides",
+  },
+];
+
+// --- Reusable UI bits -------------------------------------------------------
+const Tag = ({ children }) => (
+  <span className="rounded-full border px-2 py-1 text-xs opacity-80">{children}</span>
+);
+
+const Section = ({ id, title, children }) => (
+  <section id={id} className="scroll-mt-24 py-12">
+    <div className="mx-auto max-w-6xl px-4">
+      <h2 className="mb-6 text-2xl font-semibold tracking-tight">{title}</h2>
+      {children}
+    </div>
+  </section>
+);
+
+// --- Main component ---------------------------------------------------------
+export default function Portfolio() {
+  const { theme, toggle } = useTheme();
+
+  const meta = useMemo(() => ({
+    name: "Daniel",
+    role: "Student • Builder • Sprinter",
+    blurb:
+      "I build useful tools, games, and workshops. My sweet spot is turning ideas into shippable, documented projects.",
+    email: "you@example.com",
+    github: "https://github.com/your-username",
+    resume: "#", // link to a PDF in /public or external
+  }), []);
+
+  return (
+    <div className={theme === "dark" ? "dark" : ""}>
+      <div className="min-h-screen bg-white text-zinc-900 transition-colors dark:bg-zinc-950 dark:text-zinc-100">
+        {/* Top nav */}
+        <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/70">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <a href="#top" className="font-semibold tracking-tight">{meta.name}</a>
+            <nav className="hidden gap-6 text-sm md:flex">
+              <a className="opacity-80 hover:opacity-100" href="#projects">Projects</a>
+              <a className="opacity-80 hover:opacity-100" href="#about">About</a>
+              <a className="opacity-80 hover:opacity-100" href="#contact">Contact</a>
+            </nav>
+            <div className="flex items-center gap-3">
+              <a
+                href={meta.resume}
+                className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm dark:border-zinc-800"
+              >
+                <FileText className="h-4 w-4" /> Resume
+              </a>
+              <button
+                aria-label="Toggle theme"
+                onClick={toggle}
+                className="rounded-xl border p-2 hover:shadow-sm dark:border-zinc-800"
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Hero */}
+        <section id="top" className="border-b py-16 dark:border-zinc-800">
+          <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 md:grid-cols-2">
+            <div>
+              <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
+                {meta.role}
+              </h1>
+              <p className="mt-4 max-w-prose text-zinc-600 dark:text-zinc-300">
+                {meta.blurb}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href="#projects"
+                  className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-2 text-white hover:opacity-90 dark:bg-zinc-100 dark:text-zinc-900"
+                >
+                  View Projects <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href={meta.github}
+                  className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 hover:shadow-sm dark:border-zinc-800"
+                >
+                  <Github className="h-4 w-4" /> GitHub
+                </a>
+              </div>
+            </div>
+            <div className="rounded-2xl border p-6 shadow-sm dark:border-zinc-800">
+              <ul className="grid gap-3 text-sm">
+                <li className="flex items-center justify-between">
+                  <span>Shipped Projects</span>
+                  <span className="rounded-full bg-zinc-100 px-2 py-1 text-xs dark:bg-zinc-900">{projects.length}</span>
+                </li>
+                <li className="flex items-center justify-between">
+                  <span>Focus Areas</span>
+                  <span className="opacity-80">App Dev • Game Dev • Security</span>
+                </li>
+                <li className="flex items-center justify-between">
+                  <span>Currently</span>
+                  <span className="opacity-80">Portfolio sprint (1 week)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Projects */}
+        <Section id="projects" title="Projects">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((p) => (
+              <article
+                key={p.title}
+                className="group overflow-hidden rounded-2xl border shadow-sm transition hover:shadow-md dark:border-zinc-800"
+              >
+                <div className="aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="space-y-3 p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-lg font-semibold leading-tight">{p.title}</h3>
+                    {p.highlight && (
+                      <span className="rounded-lg bg-amber-100 px-2 py-1 text-[10px] font-medium text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+                        {p.highlight}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-300">{p.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {p.tags.map((t) => (
+                      <Tag key={t}>{t}</Tag>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3 pt-1 text-sm">
+                    {p.links.live && (
+                      <a href={p.links.live} className="inline-flex items-center gap-1 opacity-80 hover:opacity-100">
+                        <LinkIcon className="h-4 w-4" /> Live
+                      </a>
+                    )}
+                    {p.links.repo && (
+                      <a href={p.links.repo} className="inline-flex items-center gap-1 opacity-80 hover:opacity-100">
+                        <Github className="h-4 w-4" /> Code
+                      </a>
+                    )}
+                    {p.links.video && (
+                      <a href={p.links.video} className="inline-flex items-center gap-1 opacity-80 hover:opacity-100">
+                        <ArrowUpRight className="h-4 w-4" /> Demo
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </Section>
+
+        {/* About */}
+        <Section id="about" title="About">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
+                I’m Daniel — a varsity hurdler and maker who loves shipping. I combine
+                disciplined training with focused building: productivity tools, indie
+                games, and cybersecurity workshops. My goal this year is to publish,
+                measure, and iterate in public.
+              </p>
+              <ul className="mt-4 grid gap-2 text-sm opacity-90">
+                <li>• Strengths: fast prototyping, clear docs, tasteful UI</li>
+                <li>• Learning: ethical hacking, Godot patterns, AI-assisted dev</li>
+                <li>• Values: momentum > perfection; research > speculation</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border p-5 dark:border-zinc-800">
+              <h4 className="mb-3 font-semibold">At a glance</h4>
+              <ul className="space-y-2 text-sm">
+                <li>🏃 400m hurdles • competitive mindset</li>
+                <li>💻 Flutter, JS/TS, Godot, Python</li>
+                <li>🔐 PicoCTF mentor • library workshops</li>
+                <li>🎯 Goal: ship 1+ thing / month</li>
+              </ul>
+            </div>
+          </div>
+        </Section>
+
+        {/* Contact */}
+        <Section id="contact" title="Contact">
+          <div className="rounded-2xl border p-6 dark:border-zinc-800">
+            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+              <div>
+                <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                  Interested in collaborating, mentoring, or testing my projects?
+                </p>
+                <p className="text-lg font-medium">Let’s talk.</p>
+              </div>
+              <div className="flex gap-3">
+                <a
+                  href={`mailto:${meta.email}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-2 text-white hover:opacity-90 dark:bg-zinc-100 dark:text-zinc-900"
+                >
+                  <Mail className="h-4 w-4" /> Email me
+                </a>
+                <a
+                  href={meta.github}
+                  className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 hover:shadow-sm dark:border-zinc-800"
+                >
+                  <Github className="h-4 w-4" /> GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* Footer */}
+        <footer className="border-t py-10 text-center text-sm opacity-70 dark:border-zinc-800">
+          <div className="mx-auto max-w-6xl px-4">© {new Date().getFullYear()} {meta.name}. Built with React + Tailwind.</div>
+        </footer>
+      </div>
+
+      {/* Tailwind utility injector for the preview environment */}
+      <style>{`
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        .dark .dark\:bg-zinc-950 { background-color: #0a0a0a; }
+      `}</style>
+    </div>
+  );
+}
